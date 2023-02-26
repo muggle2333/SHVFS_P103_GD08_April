@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StructureColliderComponent : MonoBehaviour
+public class StructureComponent : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()

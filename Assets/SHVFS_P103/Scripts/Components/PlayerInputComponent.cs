@@ -1,11 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-//Abstract class cannot be used directly
+//Abstract class cannot be used directly，like blueprint, need to inherit from this class
 //We inherit  from them, and implement their member
 public abstract class InputComponentBase : MonoBehaviour
 {
@@ -53,6 +53,6 @@ public class PlayerInputComponent : InputComponentBase
     }
     public override Vector2 GetInputDirectionNoramalized()
     {
-        return GetInputDirection().normalized;
+        return GetInputDirection().normalized;  //if(1.1) the move will be too fast
     }
 }

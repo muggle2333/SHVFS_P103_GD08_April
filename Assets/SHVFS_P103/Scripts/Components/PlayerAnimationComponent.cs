@@ -13,9 +13,8 @@ public class PlayerAnimationComponent : MonoBehaviour
     }
     void Update()
     {
-        float playerMovement = Vector2.SqrMagnitude(playerInputComponent.GetInputDirection());
         //playerAnimator.SetFloat("inputDirection",playerMovement);;
-        if(playerMovement>0.01f)
+        if(playerInputComponent.GetInputDirectionNoramalized().magnitude>0f)
         {
             playerAnimator.Play("Walk");
         }
