@@ -15,29 +15,39 @@ public class IngredientSpawnerComponent: InteractableComponent
     }
     public override void Interact(Transform owner, ObjectComponent objectComponent)
     {
-        //if no object on the top,Interact = >create one on the top
-        //if there is one on the top, Interact
-        //1. if has one = > put it down
-        //2. if don't = > give one to the owner
-        if (!IsSpawned())
+
+        //if (!IsSpawned())
+        //{
+        //    //Spawn one
+        //    GameObject.Instantiate(spawnedObject, objectPosition.position, transform.rotation, objectPosition);
+        //    Debug.Log("Spawn the food");
+        //}
+        //else if(objectComponent == null)
+        //{
+        //    //Take it
+        //    ownedObject.ChangeOwner(owner);
+        //    Debug.Log("Take the food");
+        //}
+        //else
+        //{
+        //    //Put it down
+        //    objectComponent.PutDownObject(owner);
+        //    Debug.Log("Put down the food");
+        //}
+        if (objectComponent != null) return;
+        if(!IsSpawned())
         {
             //Spawn one
-            GameObject.Instantiate(spawnedObject, objectPosition.position, transform.rotation, objectPosition);
+            Instantiate(spawnedObject, objectPosition.position, transform.rotation, objectPosition);
             Debug.Log("Spawn the food");
         }
-        else if(objectComponent == null)
+        else
         {
             //Take it
             ownedObject.ChangeOwner(owner);
             Debug.Log("Take the food");
         }
-        else
-        {
-            //Put it down
-            objectComponent.PutDownObject(owner);
-            Debug.Log("Put down the food");
-        }
-        
+
     }
 
 }
