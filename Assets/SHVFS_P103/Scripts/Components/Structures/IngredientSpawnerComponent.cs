@@ -8,9 +8,9 @@ public class IngredientSpawnerComponent: InteractableComponent
     private void Start()
     {
     }
-    private bool IsSpawned()
+    private ObjectComponent IsSpawned()
     {
-        ownedObject = objectPosition.GetComponentInChildren<ObjectComponent>();
+        ownedObject= objectPosition.GetComponentInChildren<ObjectComponent>();
         return ownedObject;
     }
     public override void Interact(Transform owner, ObjectComponent objectComponent)
@@ -34,7 +34,12 @@ public class IngredientSpawnerComponent: InteractableComponent
         //    objectComponent.PutDownObject(owner);
         //    Debug.Log("Put down the food");
         //}
-        if (objectComponent != null) return;
+        IsSpawned();
+        if(objectComponent!= null)
+        {
+            objectComponent.ChangeOwner(objectPosition);
+            return;
+        }
         if(!IsSpawned())
         {
             //Spawn one
@@ -47,6 +52,7 @@ public class IngredientSpawnerComponent: InteractableComponent
             ownedObject.ChangeOwner(owner);
             Debug.Log("Take the food");
         }
+        
 
     }
 
