@@ -47,7 +47,10 @@ namespace SHVFS_P103
                 transform.SetParent(HolderComponent.HolderProxy);
                 Rigidbody.isKinematic = true;
                 
-                //transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+                this.transform.localPosition = Vector3.zero;
+                this.transform.localRotation = Quaternion.identity;
+                //this.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+                //this.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
                 return;
             }
             
