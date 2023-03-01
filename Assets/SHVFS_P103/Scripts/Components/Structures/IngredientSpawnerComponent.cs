@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class IngredientSpawnerComponent: InteractableComponent
+public class IngredientSpawnerComponent: InteractableComponentBase
 {
 
     [SerializeField] ObjectComponent spawnedObject;
@@ -13,6 +13,7 @@ public class IngredientSpawnerComponent: InteractableComponent
         ownedObject= objectPosition.GetComponentInChildren<ObjectComponent>();
         return ownedObject;
     }
+    
     public override void Interact(Transform owner, ObjectComponent objectComponent)
     {
 
@@ -53,6 +54,16 @@ public class IngredientSpawnerComponent: InteractableComponent
             Debug.Log("Take the food");
         }
         
+
+    }
+
+    //Chris Ver
+    public IngredientConfiguration Configuration;
+    public override void Interaction()
+    {
+        var ingredient = Instantiate(Configuration.Ingredient);
+        ingredient.transform.localScale = Configuration.Scale * Configuration.ScaleFactor;
+        Debug.Log($"Instatiated the Ingredient:{ingredient.transform.name}");
 
     }
 

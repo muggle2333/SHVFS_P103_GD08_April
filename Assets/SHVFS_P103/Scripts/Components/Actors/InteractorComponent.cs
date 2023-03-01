@@ -42,7 +42,7 @@ public  class InteractorComponent : MonoBehaviour
     {
         var hits = Physics.CapsuleCastAll(transform.position, transform.position + Vector3.up * playerHeight, playerWidth, transform.forward, movementDistance);
         if (hits.Length < 1) return;
-        //if(hits.Any(hit => hit.transform.GetComponent<InteractableComponent>()!=null))
+        //if(hits.Any(hit => hit.transform.GetComponent<InteractableComponentBase>()!=null))
         //{
         //    Interact();
         //}
@@ -51,10 +51,11 @@ public  class InteractorComponent : MonoBehaviour
         {
             rayDistance = hit.distance;
             //Debug.Log(hit.collider.name);
-            var interactable = hit.transform.GetComponent<InteractableComponent>();
+            var interactable = hit.transform.GetComponent<InteractableComponentBase>();
             if (interactable == null) continue;
             objectComponent = objectPosition.GetComponentInChildren<ObjectComponent>();
-            interactable.Interact(objectPosition,objectComponent);
+            //interactable.Interact(objectPosition,objectComponent);
+            interactable.Interaction();
         }
         
 

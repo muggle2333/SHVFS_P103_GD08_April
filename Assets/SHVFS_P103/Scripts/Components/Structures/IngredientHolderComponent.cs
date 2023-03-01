@@ -2,13 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IngredientHolderComponent : InteractableComponent
+public class IngredientHolderComponent : InteractableComponentBase
 {
     private ObjectComponent ownedObject;
     private bool IsOwnObject()
     {
         ownedObject = objectPosition.GetComponentInChildren<ObjectComponent>();
         return ownedObject;
+    }
+    public override void Interaction()
+    {
+
     }
     public override void Interact(Transform owner, ObjectComponent objectComponent)
     {
@@ -27,4 +31,5 @@ public class IngredientHolderComponent : InteractableComponent
         }
 
     }
+    
 }
