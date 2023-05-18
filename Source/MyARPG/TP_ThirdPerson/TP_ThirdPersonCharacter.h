@@ -17,6 +17,10 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
+	FVector Velocity;
+	void MoveForward(float Value);
+	void MoveRight(float Value);
+
 public:
 	// Sets default values for this character's properties
 	ATP_ThirdPersonCharacter();
@@ -24,9 +28,8 @@ public:
 		float BaseTurnRate;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 		float BaseLoopUpRate;
-	
-	/*void MoveForward(float Value);
-	void MoveRight(float Value);*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
+		float MoveMaxSpeed;
 
 
 protected:
@@ -42,6 +45,5 @@ public:
 	//APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	//End of APawn interface
-	void MoveForward();
 
 };

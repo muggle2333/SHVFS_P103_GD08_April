@@ -4,6 +4,7 @@
 #include "TP_ThirdPersonCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Containers/UnrealString.h"
 
 // Sets default values
 ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
@@ -21,6 +22,10 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom,USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	MoveMaxSpeed = 100.f;
+	//Velocity = FVector(0, 0, 0);
+	Velocity = FVector::ZeroVector;
 }
 
 
@@ -35,7 +40,12 @@ void ATP_ThirdPersonCharacter::BeginPlay()
 void ATP_ThirdPersonCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (Velocity.X != 0 || Velocity.Y != 0)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(TEXT("x:%d,y:%d"), Velocity.X, Velocity.Y));
+	}
+	
+	AddActorLocalOffset(Velocity * DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -43,8 +53,8 @@ void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* Player
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	check(PlayerInputComponent);
-	//PlayerInputComponent->BindAxis("MoveForward", this, &ATP_ThirdPersonCharacter::MoveForward);
-	//PlayerInputComponent->BindAxis("MoveRight", this, &ATP_ThirdPersonCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", this, &ATP_ThirdPersonCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ATP_ThirdPersonCharacter::MoveRight);
 	
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	//PlayerInputComponent->BindAxis("TurnRate", this, &ATP_ThirdPersonCharacter::TurnAtRate);
@@ -53,12 +63,13 @@ void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* Player
 
 }
 
-//void ATP_ThirdPersonCharacter::MoveForward(float Value)
-//{
-//	if (Value != 0.f && Controller && Controller->IsLocalPlayerController())
-//	{
-//		APlayerController* const PC = CastChecked<APlayerController>(Controller);
-//		PC->AddYawInput(Value);
-//	}
-//}
+void ATP_ThirdPersonCharacter::MoveForward(float Value)
+{
+	Velocity.X = FMath::Clamp(Value,-1.0f,1.0f)*MoveMaxSpeed;
+}
+
+void ATP_ThirdPersonCharacter::MoveRight(float Value)
+{
+	Velocity.Y = FMath::Clamp(Value, -1.0f, 1.0f) * MoveMaxSpeed;
+}
 
