@@ -6,6 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Containers/UnrealString.h"
 
+
 // Sets default values
 ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 {
@@ -23,9 +24,9 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 	FollowCamera->SetupAttachment(CameraBoom,USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
-	MoveMaxSpeed = 100.f;
+	//MoveMaxSpeed = 100.f;
 	//Velocity = FVector(0, 0, 0);
-	Velocity = FVector::ZeroVector;
+	//Velocity = FVector::ZeroVector;
 }
 
 
@@ -33,6 +34,13 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 void ATP_ThirdPersonCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	UWorld* world = this->GetWorld();
+	auto controller = world->GetFirstPlayerController();
+	UInputComponent* comp = controller->InputComponent;
+	//comp->BindAction("Test",IE_Pressed,this,&ATP_ThirdPersonCharacter::Test);
+	//SetupPlayerInputComponent(comp);
+	//SetActorLocation(FVector::ZeroVector);
 	
 }
 
@@ -40,12 +48,12 @@ void ATP_ThirdPersonCharacter::BeginPlay()
 void ATP_ThirdPersonCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (Velocity.X != 0 || Velocity.Y != 0)
+	/*if (Velocity.X != 0 || Velocity.Y != 0)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(TEXT("x:%d,y:%d"), Velocity.X, Velocity.Y));
 	}
 	
-	AddActorLocalOffset(Velocity * DeltaTime);
+	AddActorLocalOffset(Velocity * DeltaTime);*/
 }
 
 // Called to bind functionality to input
@@ -56,20 +64,62 @@ void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* Player
 	PlayerInputComponent->BindAxis("MoveForward", this, &ATP_ThirdPersonCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ATP_ThirdPersonCharacter::MoveRight);
 	
+	//For PC Mouse
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	//PlayerInputComponent->BindAxis("TurnRate", this, &ATP_ThirdPersonCharacter::TurnAtRate);
-	PlayerInputComponent->BindAxis("LoopUp", this, &APawn::AddControllerYawInput);
-	//PlayerInputComponent->BindAxis("LookUpRate", this, &ATP_ThirdPersonCharacter::LookUpAtRate);
+	//For Controller
+	PlayerInputComponent->BindAxis("TurnRate", this, &ATP_ThirdPersonCharacter::TurnAtRate);
+	//For PC Mouse
+	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+	//For Controller
+	PlayerInputComponent->BindAxis("LookUpRate", this, &ATP_ThirdPersonCharacter::LookUpAtRate);
 
 }
 
 void ATP_ThirdPersonCharacter::MoveForward(float Value)
 {
-	Velocity.X = FMath::Clamp(Value,-1.0f,1.0f)*MoveMaxSpeed;
+	//Velocity.X = FMath::Clamp(Value,-1.0f,1.0f)*MoveMaxSpeed;
+	if ((Controller != NULL) && (Value != 0.0f))
+	{
+		//Find the forward way
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		//get forward vector
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, Value);
+	}
 }
 
 void ATP_ThirdPersonCharacter::MoveRight(float Value)
 {
-	Velocity.Y = FMath::Clamp(Value, -1.0f, 1.0f) * MoveMaxSpeed;
+	//Velocity.Y = FMath::Clamp(Value, -1.0f, 1.0f) * MoveMaxSpeed;
+	if ((Controller != NULL) && (Value != 0.0f))
+	{
+		//Find the forward way
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		//get forward vector
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		AddMovementInput(Direction, Value);
+	}
 }
 
+void ATP_ThirdPersonCharacter::TurnAtRate(float Rate)
+{
+	if (Controller != NULL)
+	{
+		AddControllerYawInput(Rate);
+	}
+}
+
+void ATP_ThirdPersonCharacter::LookUpAtRate(float Rate)
+{
+	if (Controller != NULL)
+	{
+		AddControllerPitchInput(Rate);
+	}
+}
+
+void ATP_ThirdPersonCharacter::Test()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(TEXT("Test")));
+}

@@ -20,6 +20,10 @@ private:
 	FVector Velocity;
 	void MoveForward(float Value);
 	void MoveRight(float Value);
+	void TurnAtRate(float Rate);
+	void LookUpAtRate(float Rate);
+
+	void Test();
 
 public:
 	// Sets default values for this character's properties
@@ -28,8 +32,8 @@ public:
 		float BaseTurnRate;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 		float BaseLoopUpRate;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
-		float MoveMaxSpeed;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
+	//	float MoveMaxSpeed;
 
 
 protected:
@@ -46,4 +50,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	//End of APawn interface
 
+	/** Returns CameraBoom subobject **/
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	/** Returns FollowCamera subobject **/
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
